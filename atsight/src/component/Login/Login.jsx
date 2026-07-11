@@ -8,7 +8,6 @@ import { AuthContext } from "../Utils/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "../Utils/axios";
 
-
 const Login = () => {
   const { setLogin, setUserInfo } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -26,22 +25,17 @@ const Login = () => {
         photoUrl: user.photoURL,
       };
 
-      // Update Context
-     await axios.post('/api/user',userData).then(
-      (response)=>{
-        setUserInfo(response.data.user);
-         localStorage.setItem("userInfo", JSON.stringify(response.data.user));
-      }).catch(err =>{
-        console.log(err);
-      }
-     )
+      // Register/Login user
+      const response = await axios.post('/api/user', userData);
+      setUserInfo(response.data.user);
+      localStorage.setItem("userInfo", JSON.stringify(response.data.user));
       setLogin(true);
       localStorage.setItem("isLogin", "true");
-     
+
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Something Went Wrong");
+      console.error("Login Error:", err);
+      alert("Something Went Wrong. Please try again.");
     }
   };
 

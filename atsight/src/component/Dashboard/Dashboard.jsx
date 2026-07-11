@@ -9,36 +9,48 @@ import { AuthContext } from "../Utils/AuthContext";
 
 const Dashboard = () => {
   const { userInfo } = useContext(AuthContext);
-  const [uploadFiletext,setUploadFiletext] = useState("Upload your resume");
-  const [loading,setLoading] = useState(false);
-  const [resumeFile,setResumeFile] = useState(null);
-  const [jobDesc,setjobDesc] = useState("");
-  const [result,setResult] = useState(null);
-  const handleonChangeFile = (e)=>{
+  const [uploadFiletext, setUploadFiletext] = useState("Upload your resume");
+  const [loading, setLoading] = useState(false);
+  const [resumeFile, setResumeFile] = useState(null);
+  const [jobDesc, setjobDesc] = useState("");
+  const [result, setResult] = useState(null);
+
+  const handleonChangeFile = (e) => {
     setResumeFile(e.target.files[0]);
     setUploadFiletext(e.target.files[0].name)
   }
-  const handleUpload = async()=>{
+
+  const handleUpload = async () => {
     setResult(null);
-    if(!jobDesc||!resumeFile){
+    if (!jobDesc || !resumeFile) {
       alert('Please fill job Description & upload Resume');
-      return ;
+      return;
     }
+    
+    if (resumeFile.type !== 'application/pdf') {
+      alert('Only PDF files are accepted');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("resume",resumeFile);
+    formData.append("resume", resumeFile);
     formData.append("job_desc", jobDesc);
-    formData.append("job_desc",jobDesc);
-    formData.append("user",userInfo);
-    try{
-      const result = await axios.post('/api/resume/addResume',formData);
-      console.log(result);
-    }
-    catch(err){
-      console.log(err)
+    formData.append("user", userInfo);
+
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/resume/addResume', formData);
+      setResult(response.data);
+      console.log('Analysis Result:', response.data);
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Error analyzing resume. Please try again.');
+    } finally {
+      setLoading(false);
     }
   }
-  return (
 
+  return (
     <div className={styles.Dashboard}>
       <div className={styles.DashboardLeft}>
         <div className={styles.DashboardHeader}>
@@ -67,46 +79,58 @@ const Dashboard = () => {
             </label>
             <input type="file" accept=".pdf" id="inputField" onChange={handleonChangeFile} />
           </div>
-          
-           <div className={styles.jobDesc}>
-                    <textarea value={jobDesc} onChange={(e) => { setjobDesc(e.target.value) }} className={styles.textArea} placeholder='Paste Your Job Description' rows={10} cols={50} />
-                    <div className={styles.AnalyzeBtn} onClick={handleUpload} >Analyze</div>
-                </div>
-        
+
+          <div className={styles.jobDesc}>
+            <textarea
+              value={jobDesc}
+              onChange={(e) => { setjobDesc(e.target.value) }}
+              className={styles.textArea}
+              placeholder='Paste Your Job Description'
+              rows={10}
+              cols={50}
+            />
+            <div
+              className={styles.AnalyzeBtn}
+              onClick={handleUpload}
+              style={{ opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+            >
+              {loading ? 'Analyzing...' : 'Analyze'}
+            </div>
+          </div>
         </div>
       </div>
+
       <div className={styles.DashboardRight}>
-        <div className={styles.DashboardRightTopCard}>
-          <div>Analyze with AI</div>
-          <img
-            className={styles.profileImg}
-            src={
-              "https://static.vecteezy.com/system/resources/previews/000/180/981/original/vector-graphic-designer-resume.jpg"
-            }
+        {loading ? (
+          <Skeleton
+            variant="rectangular"
+            sx={{ borderRadius: "20px" }}
+            width={280}
+            height={280}
           />
-          <h2>Vishal singh</h2>
-        </div>
-
-        {/* <div className={styles.DashboardRightTopCard}>
-          <div>Result</div>
-          
-          <div style={{display:"flex",justifyContent:"Center",alignItems:"Center",gap : 20}}>
-            <h1>75%</h1>
-            <ScoreIcon />
-
+        ) : result ? (
+          <div className={styles.DashboardRightTopCard}>
+            <div>Analysis Result</div>
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 20 }}>
+              <h1>{result.matchScore || 0}%</h1>
+              <ScoreIcon />
+            </div>
+            <div className={styles.Feedback}>
+              <h3>Feedback</h3>
+              <p>{result.feedback || 'No feedback available'}</p>
+            </div>
           </div>
-          <div className={styles.Feedback}>
-             <h3>Feedback</h3>
-             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt eligendi numquam beatae voluptates veniam doloremque placeat asperiores vitae minus mollitia doloribus eius delectus quia et consequuntur vero, voluptatum ex quod?</p>
-
+        ) : (
+          <div className={styles.DashboardRightTopCard}>
+            <div>Analyze with AI</div>
+            <img
+              className={styles.profileImg}
+              src="https://static.vecteezy.com/system/resources/previews/000/180/981/original/vector-graphic-designer-resume.jpg"
+              alt="Resume analysis"
+            />
+            <h2>{userInfo?.name || 'User'}</h2>
           </div>
-        </div> */}
-        <Skeleton
-          variant="rectangular"
-          sx={{ borderRadius: "20px" }}
-          width={280}
-          height={280}
-        />
+        )}
       </div>
     </div>
   );
