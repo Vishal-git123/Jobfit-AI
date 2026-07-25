@@ -5,18 +5,15 @@ import { AuthContext } from "../AuthContext";
 const withAuthHOC = (WrappedComponent) => {
   return function AuthenticatedComponent(props) {
     const navigate = useNavigate();
-    const { isLogin, setLogin } = useContext(AuthContext);
+    const { isLogin, userInfo } = useContext(AuthContext);
 
     useEffect(() => {
-      const login = localStorage.getItem("isLogin");
-
-      if (login !== "true") {
-        setLogin(false);
+      if (!isLogin || !userInfo?._id) {
         navigate("/");
       }
-    }, [navigate, setLogin]);
+    }, [isLogin, userInfo, navigate]);
 
-    if (!isLogin || localStorage.getItem("isLogin") !== "true") {
+    if (!isLogin || !userInfo?._id) {
       return null;
     }
 

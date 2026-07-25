@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { AuthContext } from "../Utils/AuthContext";
 
 const Dashboard = () => {
-  const { userInfo } = useContext(AuthContext);
+   const { userInfo } = useContext(AuthContext);
   const [uploadFiletext,setUploadFiletext] = useState("Upload your resume");
   const [loading,setLoading] = useState(false);
   const [resumeFile,setResumeFile] = useState(null);
@@ -18,28 +18,58 @@ const Dashboard = () => {
     setResumeFile(e.target.files[0]);
     setUploadFiletext(e.target.files[0].name)
   }
-  const handleUpload = async()=>{
-    setResult(null);
-    if(!jobDesc||!resumeFile){
-      alert('Please fill job Description & upload Resume');
-      return ;
-    }
-    const formData = new FormData();
-    formData.append("resume",resumeFile);
-    formData.append("job_desc", jobDesc);
-    formData.append("job_desc",jobDesc);
-    formData.append("user",userInfo);
-    setLoading(true);
-    try{
-      const result = await axios.post('/api/resume/addResume',formData);
-      setResult(result.data.data);
-    }
-    catch(err){
-      console.log(err)
-    }finally{
-      setLoading(false);
-    }
-  }
+ const handleUpload = async () => {
+   console.log("FULL USER INFO:", userInfo);
+   console.log("USER ID:", userInfo?._id);
+   console.log("RESUME FILE:", resumeFile);
+   console.log("JOB DESCRIPTION:", jobDesc);
+
+   setResult(null);
+
+   if (!jobDesc || !resumeFile) {
+     alert("Please fill Job Description & upload Resume");
+     return;
+   }
+
+   if (!userInfo?._id) {
+     alert("User information not available");
+     return;
+   }
+
+   const formData = new FormData();
+
+   // IMPORTANT: Backend ke multer field name se match hona chahiye
+   formData.append("resume", resumeFile);
+
+   // User ID
+   formData.append("user", userInfo._id);
+
+   // Job Description
+   formData.append("job_desc", jobDesc);
+   console.log("FORM DATA:");
+   console.log("resume:", formData.get("resume"));
+   console.log("user:", formData.get("user"));
+   console.log("job_desc:", formData.get("job_desc"));
+
+   setLoading(true);
+
+   try {
+     const response = await axios.post("/api/resume/addResume", formData);
+
+     console.log("Resume Analysis Response:", response.data);
+
+     setResult(response.data.data);
+   } catch (err) {
+     console.error("Resume Upload Error:", err.response?.data || err.message);
+
+     alert(
+       err.response?.data?.message ||
+         "Something went wrong while analyzing resume",
+     );
+   } finally {
+     setLoading(false);
+   }
+ };
   return (
     <div className={styles.Dashboard}>
       <div className={styles.DashboardLeft}>
