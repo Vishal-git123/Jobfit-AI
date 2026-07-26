@@ -6,7 +6,7 @@ Jobfit-AI is an AI-powered resume analysis platform that helps job seekers evalu
 
 > Add your deployed application URL here.
 
-**Live Application:** `https://your-deployment-url.com`
+**Live Application: https://jobfit-ai-xi.vercel.app
 
 ---
 
