@@ -4,8 +4,6 @@ Jobfit-AI is an AI-powered resume analysis platform that helps job seekers evalu
 
 ## 🚀 Live Demo
 
-> Add your deployed application URL here.
-
 **Live Application: https://jobfit-ai-xi.vercel.app
 
 ---
