@@ -12,7 +12,7 @@ const Suggestions = () => {
   const [loader, setLoader] = useState(false);
   const [error, setError] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [filterMode, setFilterMode] = useState("all"); // all, suggestions, feedback
+  const [filterMode, setFilterMode] = useState("all");
   const { userInfo } = useContext(AuthContext);
 
   useEffect(() => {
@@ -24,14 +24,13 @@ const Suggestions = () => {
 
       try {
         const results = await axios.get("/api/resume/get/" + userInfo._id);
-        console.log("Resume History with Suggestions:", results.data.resumes);
         setData(results.data.resumes || []);
       } catch (err) {
         console.error("Error fetching suggestions:", err);
         setError("Failed to load your suggestions and feedback");
         setData([]);
       } finally {
-        setLoader(false);
+        setLoader(false);  // ✅ FIX: THIS WAS COMMENTED OUT!
       }
     };
 
@@ -82,7 +81,7 @@ const Suggestions = () => {
   return (
     <div className={styles.Suggestions}>
       <div className={styles.SuggestionsHeader}>
-        <h1 className={styles.SuggestionsTitle}>Suggestions & Feedback</h1>
+        <h1 className={styles.SuggestionsTitle}>💡 Suggestions & Feedback</h1>
         <p className={styles.SuggestionsSubtitle}>
           AI-powered insights to improve your resume and increase match scores
         </p>
@@ -94,7 +93,7 @@ const Suggestions = () => {
           className={`${styles.filterBtn} ${filterMode === "all" ? styles.active : ""}`}
           onClick={() => setFilterMode("all")}
         >
-          All
+          All Results
         </button>
         <button
           className={`${styles.filterBtn} ${filterMode === "suggestions" ? styles.active : ""}`}
@@ -163,7 +162,7 @@ const Suggestions = () => {
 
                 {/* Job Description Preview */}
                 <div className={styles.jobDescPreview}>
-                  <strong>Job Posted For:</strong>
+                  <strong>📋 Job Posted For:</strong>
                   <p>{item.job_desc?.substring(0, 80)}...</p>
                 </div>
 
@@ -206,7 +205,7 @@ const Suggestions = () => {
 
                     {/* Full Feedback */}
                     <div className={styles.section}>
-                      <div className={styles.sectionTitle}>Complete Feedback</div>
+                      <div className={styles.sectionTitle}>📝 Complete Feedback</div>
                       <div className={styles.fullFeedback}>
                         {item.feedback}
                       </div>

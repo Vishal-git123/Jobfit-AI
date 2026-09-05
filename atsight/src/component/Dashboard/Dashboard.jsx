@@ -22,11 +22,6 @@ const Dashboard = () => {
   }
   
  const handleUpload = async () => {
-    console.log("FULL USER INFO:", userInfo);
-    console.log("USER ID:", userInfo?._id);
-    console.log("RESUME FILE:", resumeFile);
-    console.log("JOB DESCRIPTION:", jobDesc);
-
     setResult(null);
     setError(null);
 
@@ -44,20 +39,17 @@ const Dashboard = () => {
     formData.append("resume", resumeFile);
     formData.append("user", userInfo._id);
     formData.append("job_desc", jobDesc);
-    
-    console.log("FORM DATA:");
-    console.log("resume:", formData.get("resume"));
-    console.log("user:", formData.get("user"));
-    console.log("job_desc:", formData.get("job_desc"));
 
     setLoading(true);
 
     try {
       const response = await axios.post("/api/resume/addResume", formData);
-      console.log("Resume Analysis Response:", response.data);
       setResult(response.data.data);
+      // Clear form after successful analysis
+      setjobDesc("");
+      setResumeFile(null);
+      setUploadFiletext("Upload your resume");
     } catch (err) {
-      console.error("Resume Upload Error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Something went wrong while analyzing resume");
     } finally {
       setLoading(false);
@@ -77,13 +69,11 @@ const Dashboard = () => {
         </div>
         
         <div className={styles.alertInfo}>
-          <div>Important Instructions</div>
+          <div>⚡ Important Instructions</div>
           <div className={styles.dashboardInstruction}>
-            <div>
-              Please paste the complete job description in the "Job Description"
-              field before submitting.
-            </div>
-            <div>Only PDF Format (.pdf) resumes are accepted.</div>
+            <div>✓ Paste the complete job description in the field below</div>
+            <div>✓ Upload resume in PDF format only (.pdf)</div>
+            <div>✓ Our AI will analyze your match score instantly</div>
           </div>
         </div>
         
@@ -97,7 +87,7 @@ const Dashboard = () => {
             color: '#dc3545',
             fontSize: '14px'
           }}>
-            {error}
+            ❌ {error}
           </div>
         )}
         
@@ -107,7 +97,7 @@ const Dashboard = () => {
           </div>
           <div className={styles.DashboardInputField}>
             <label htmlFor="inputField" className={styles.analyzeAIBtn}>
-              Upload Resume
+              📁 Upload Resume (PDF)
             </label>
             <input
               type="file"
@@ -124,33 +114,38 @@ const Dashboard = () => {
                 setjobDesc(e.target.value);
               }}
               className={styles.textArea}
-              placeholder="Paste Your Job Description (e.g., Job requirements, skills needed, experience level)"
+              placeholder="📋 Paste Your Job Description here...\n\nExample:\n- Required skills (Python, React, etc)\n- Years of experience needed\n- Key responsibilities\n- Education requirements\n- Salary range (optional)"
               rows={8}
             />
-            <div className={styles.AnalyzeBtn} onClick={handleUpload}>
-              {loading ? '...' : 'Analyze'}
-            </div>
+            <button 
+              className={styles.AnalyzeBtn} 
+              onClick={handleUpload}
+              disabled={loading}
+              title={loading ? "Analyzing..." : "Click to analyze your resume"}
+            >
+              {loading ? '⏳' : '🚀 Analyze'}
+            </button>
           </div>
         </div>
       </div>
       
       <div className={styles.DashboardRight}>
         <div className={styles.DashboardRightTopCard}>
-          <div>Analyze with AI</div>
+          <div>👤 Analyze with AI</div>
           <img className={styles.profileImg} src={userInfo?.photoUrl} alt="Profile" />
-          <h2>{userInfo?.name}</h2>
+          <h2 style={{margin: '0', fontSize: '16px'}}>{userInfo?.name}</h2>
         </div>
 
         {result && (
           <div className={styles.DashboardRightTopCard}>
-            <div>Analysis Result</div>
+            <div>✨ Analysis Result</div>
             <div className={styles.scoreDisplay}>
               <h1>{result.score}%</h1>
-              <ScoreIcon style={{fontSize: 50, color: '#667eea'}} />
+              <ScoreIcon style={{fontSize: 50, color: '#fca326'}} />
             </div>
             <div className={styles.Feedback}>
-              <h3>Feedback</h3>
-              <p>{result?.feedback}</p>
+              <h3>💡 Feedback</h3>
+              <p>{result?.feedback?.substring(0, 200)}...</p>
             </div>
           </div>
         )}
@@ -160,7 +155,7 @@ const Dashboard = () => {
             variant="rectangular"
             sx={{ borderRadius: "15px" }}
             width="100%"
-            height={280}
+            height={220}
           />
         )}
       </div>
