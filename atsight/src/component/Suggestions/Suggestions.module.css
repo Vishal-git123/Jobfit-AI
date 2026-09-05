@@ -1,0 +1,412 @@
+.Suggestions {
+    flex: 0.8;
+    height: 100vh;
+    overflow: auto;
+    padding: 40px 30px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.SuggestionsHeader {
+    margin-bottom: 40px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.SuggestionsTitle {
+    font-size: 36px;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.SuggestionsSubtitle {
+    font-size: 14px;
+    color: #666;
+    margin: 8px 0 0 0;
+    font-weight: 500;
+}
+
+/* Filter Buttons */
+.filterContainer {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filterBtn {
+    padding: 10px 20px;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    color: #f59e0b;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filterBtn:hover {
+    background: rgba(245, 158, 11, 0.1);
+    transform: translateY(-2px);
+}
+
+.filterBtn.active {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+    border-color: #f59e0b;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+}
+
+/* Cards Grid */
+.SuggestionsCardBlock {
+    width: 100%;
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.SuggestionsCard {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08),
+                0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border-radius: 18px;
+    padding: 24px;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+    border: 2px solid rgba(245, 158, 11, 0.1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.SuggestionsCard:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12),
+                0 0 1px rgba(255, 255, 255, 0.5) inset;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.SuggestionsCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #fbbf24, #f59e0b);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.SuggestionsCard:hover::before {
+    transform: translateX(0);
+}
+
+.SuggestionsCard.expanded {
+    grid-column: 1 / -1;
+}
+
+/* Card Header */
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.headerLeft {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex: 1;
+}
+
+.cardPercentage {
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    min-width: 60px;
+    text-align: center;
+}
+
+.resumeName {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.cardDate {
+    font-size: 12px;
+    color: #999;
+}
+
+.expandIcon {
+    font-size: 20px;
+    color: #f59e0b;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+}
+
+/* Job Description Preview */
+.jobDescPreview {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05));
+    border-left: 3px solid #fbbf24;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #555;
+}
+
+.jobDescPreview strong {
+    color: #f59e0b;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.jobDescPreview p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Expanded Content */
+.expandedContent {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid rgba(245, 158, 11, 0.1);
+    animation: expandIn 0.3s ease-out;
+}
+
+@keyframes expandIn {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+    }
+}
+
+/* Sections */
+.section {
+    margin-bottom: 24px;
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sectionIcon {
+    color: #f59e0b;
+    font-size: 18px !important;
+}
+
+/* List Items */
+.itemList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.listItem {
+    background: rgba(251, 191, 36, 0.05);
+    border-left: 3px solid #fbbf24;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #444;
+    transition: all 0.2s ease;
+}
+
+.listItem:hover {
+    background: rgba(251, 191, 36, 0.1);
+    transform: translateX(4px);
+}
+
+.listItem:last-child {
+    margin-bottom: 0;
+}
+
+/* Full Feedback */
+.fullFeedback {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.05), rgba(245, 158, 11, 0.05));
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Empty State */
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    border: 2px dashed rgba(245, 158, 11, 0.2);
+}
+
+.emptyState h3 {
+    font-size: 24px;
+    color: #333;
+    margin: 20px 0 10px 0;
+}
+
+.emptyState p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Skeleton Loader */
+.skeletonGrid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+    .SuggestionsCardBlock {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+    
+    .SuggestionsCard.expanded {
+        grid-column: 1 / -1;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .Suggestions {
+        padding: 20px 15px;
+    }
+
+    .SuggestionsTitle {
+        font-size: 28px;
+    }
+
+    .SuggestionsCardBlock {
+        grid-template-columns: 1fr;
+    }
+
+    .SuggestionsCard {
+        padding: 18px;
+    }
+
+    .cardPercentage {
+        font-size: 36px;
+    }
+
+    .filterContainer {
+        gap: 8px;
+    }
+
+    .filterBtn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .Suggestions {
+        padding: 15px 10px;
+    }
+
+    .SuggestionsTitle {
+        font-size: 22px;
+    }
+
+    .SuggestionsCardBlock {
+        grid-template-columns: 1fr;
+    }
+
+    .SuggestionsCard {
+        padding: 16px;
+    }
+
+    .cardPercentage {
+        font-size: 32px;
+    }
+
+    .headerLeft {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .cardHeader {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .expandIcon {
+        align-self: flex-end;
+        margin-top: -20px;
+    }
+
+    .filterBtn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}
