@@ -11,9 +11,11 @@ import axios from "../Utils/axios";
 const Login = () => {
   const { setLogin, setUserInfo } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       // 1. Google Sign In
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -52,28 +54,40 @@ const Login = () => {
       alert(
         err.response?.data?.message ||
           err.message ||
-          "Something went wrong during login",
+          "Something went wrong during login"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className={styles.Login}>
-      <div className={styles.loginCard}>
-        <div className={styles.loginCardTitle}>
-          <h1>Login</h1>
-          <VpnKeyIcon />
-        </div>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginCard}>
+          <div className={styles.loginCardTitle}>
+            <h1>JobFit AI</h1>
+            <VpnKeyIcon />
+          </div>
+          
+          <p className={styles.subtitleText}>
+            Smart Resume Analysis Powered by AI
+          </p>
 
-        <div className={styles.googleBtn} onClick={handleLogin}>
-          <GoogleIcon
-            sx={{
-              fontSize: 20,
-              color: "red",
-            }}
-          />
+          <div className={styles.divider}></div>
 
-          <span>Sign in with Google</span>
+          <button 
+            className={styles.googleBtn} 
+            onClick={handleLogin}
+            disabled={isLoading}
+          >
+            <GoogleIcon />
+            <span>{isLoading ? "Signing in..." : "Sign in with Google"}</span>
+          </button>
+
+          <p className={styles.footerText}>
+            Secure login with Google. Your data is protected.
+          </p>
         </div>
       </div>
     </div>
