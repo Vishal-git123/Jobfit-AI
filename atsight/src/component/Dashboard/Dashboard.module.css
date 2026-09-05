@@ -9,7 +9,7 @@
     box-sizing: border-box;
 }
 .DashboardLeft {
-    width: 70%;
+    width: 80%;
     padding: 30px;
     height: 100%;
     height: fit-content;
@@ -114,7 +114,7 @@ input{
 }
 
 .DashboardRight {
-    width: 25%;
+    width: 15%;
     height: fit-content;
     box-sizing: border-box;
     background-color: #f4f6fa;
